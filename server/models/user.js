@@ -14,7 +14,11 @@ const userSchema = new mongoose.Schema({
 	},
 	profileImageUrl: {
 		type: String
-	}
+	},
+	messages: [{ //Array of types
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Message"
+	}]
 });
 
 //adding the user hook right here
@@ -35,7 +39,7 @@ userSchema.pre('save', async function(next){
 });
 //User password will be matched against the one in the hash
 //Will also be stored across pages
-userSchema.method.comparePassword = async function(candidatePassword, next){
+userSchema.methods.comparePassword = async function(candidatePassword, next){
 	try {
 		let isMatch = await bcrypt.compare(candidatePassword, this.password);
 		return isMatch;

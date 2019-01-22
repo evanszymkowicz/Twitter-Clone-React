@@ -6,5 +6,5 @@ function errorHandler(error, request, response, next){
 		}
 	});
 }
-
+//This is designed to make life easy on the front end devs
 module.exports = errorHandler;

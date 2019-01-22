@@ -14,8 +14,9 @@ app.use(bodyParser.json());
 app.use('/api/auth', authRoutes);
 
 app.use(function(req, res, next){
+	//should print as 'Error 404 not found'
 	let err = new Error('Not found!');
-	err.status = 404; //should print as 'error 404'
+	err.status = 404;
 	next(err);
 });
 
