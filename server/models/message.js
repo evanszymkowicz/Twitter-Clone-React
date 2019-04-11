@@ -1,38 +1,37 @@
-const mongoose = require('mongoose');
-const User = require('./user');
+const mongoose = require("mongoose");
+const User = require("./user");
 
-//Messages will only be posted when they are tied to a specific user
 const messageSchema = new mongoose.Schema(
-	{
-		text: {
-			type: String,
-			required: true,
-			maxLength: 280
-		},
-		user: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'User' //has to match model name
-		}
-	},
-	{
-		timestamps: true
-	}
+  {
+    text: {
+      type: String,
+      required: true,
+      maxLength: 160
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  },
+  {
+    timestamps: true
+  }
 );
 
-messageSchema.pre('remove', async function(next){
-	try {
-		//find user
-		let user = await User.findById(this.user);
-		//remove id of the message from the user's list
-		user.message.remove(this.id);
-		//save
-		await user.save()
-		//return next
-		return next();
-	} catch (e) {
-		return next(err);
-	}
+messageSchema.pre("remove", async function(next) {
+  try {
+    // find a user
+    let user = await User.findById(this.user);
+    // remove the id of the message from their messages list
+    user.messages.remove(this.id);
+    // save that user
+    await user.save();
+    // return next
+    return next();
+  } catch (err) {
+    return next(err);
+  }
 });
 
-const Message = mongoose.model('Message', messageSchema)
+const Message = mongoose.model("Message", messageSchema);
 module.exports = Message;
